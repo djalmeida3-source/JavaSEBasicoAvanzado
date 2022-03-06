@@ -1,5 +1,6 @@
 package com.anncode.amazonviewer;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -49,7 +50,7 @@ public class Main {
 			System.out.println("3. Books");
 			System.out.println("4. Magazines");
 			System.out.println("5. Report");
-			System.out.println("6. Report Today");
+			System.out.println("6. Report Date");
 			System.out.println("0. Exit");
 			
 			//Leer la respuesta del usuario
@@ -77,11 +78,15 @@ public class Main {
 					exit = 1;
 					break;
 				case 6:
-					//Date date = new Date();
-					makeReport(new Date());
-					exit = 1;
+					try {
+						System.out.print("Digite la fecha del reporte a generar en formato yyyy-MM-dd: ");
+						Scanner sc = new Scanner(System.in);
+						Date dateE = new SimpleDateFormat("yyyy-MM-dd").parse(sc.nextLine());
+						makeReport(dateE);
+					} catch (ParseException e) {
+						e.printStackTrace();
+					}
 					break;
-	
 				default:
 					System.out.println();
 					System.out.println("....¡¡Selecciona una opción!!....");
@@ -290,7 +295,7 @@ public class Main {
 	}
 	
 	public static void makeReport(Date date) {
-		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd-h-m-s-S");
+		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 		String dateString = df.format(date);
 		Report report = new Report();
 		
@@ -302,7 +307,9 @@ public class Main {
 		SimpleDateFormat dfNameDays = new SimpleDateFormat("E, W MMM Y");
 		dateString = dfNameDays.format(date);
 		String contentReport = "Date: " + dateString + "\n\n\n";
-		
+
+
+
 		for (Movie movie : movies) {
 			if (movie.getIsViewed()) {
 				contentReport += movie.toString() + "\n";

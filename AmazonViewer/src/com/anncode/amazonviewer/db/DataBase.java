@@ -3,9 +3,9 @@ package com.anncode.amazonviewer.db;
 public class DataBase {
 	
 	public static final String URL 		= "jdbc:mysql://localhost:3306/";
-	public static final String DB 		= "amazonviewer";
-	public static final String USER 		= "amazonviewer";
-	public static final String PASSWORD 	= "amazonviewer";
+	public static final String DB 		= "platzi_java_se";
+	public static final String USER 		= "root";
+	public static final String PASSWORD 	= "dax082334";
 	
 	public static final String TMOVIE 			= "movie";
 	public static final String TMOVIE_ID 		= "id";
@@ -26,6 +26,7 @@ public class DataBase {
 	public static final String TVIEWED_IDMATERIAL 	= "id_material";
 	public static final String TVIEWED_IDELEMENT 	= "id_element";
 	public static final String TVIEWED_IDUSUARIO 	= "id_user";
+	public static final String TVIEWED_DATE			= "datetime";
 
 }
 

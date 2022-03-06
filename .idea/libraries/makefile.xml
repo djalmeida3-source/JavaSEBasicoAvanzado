@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="makefile">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/AmazonViewer/libs/makefile.jar!/" />
+      <root url="jar://$PROJECT_DIR$/AmazonViewer/libs/mysql-connector-java-5.1.46.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

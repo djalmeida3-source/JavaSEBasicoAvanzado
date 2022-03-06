@@ -101,7 +101,12 @@ public class Movie extends Film implements IVisualizable, MovieDAO {
 		System.out.println("Viste: " + toString());
 		System.out.println("Por: " + getTimeViewed() + " milisegundos");
 	}
-	
+
+	public static ArrayList<Movie> makeMoviesListDate(Date date) {
+		Movie movie = new Movie();
+		return movie.getMoviesViewedByDate(date);
+	}
+
 }
 
 

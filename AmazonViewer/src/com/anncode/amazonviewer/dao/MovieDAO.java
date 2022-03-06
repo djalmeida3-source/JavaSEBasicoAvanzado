@@ -5,7 +5,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+
 import static com.anncode.amazonviewer.db.DataBase.*;
 
 import com.anncode.amazonviewer.db.IDBConnection;
@@ -17,8 +20,8 @@ public interface MovieDAO extends IDBConnection {
 		try(Connection connection = connectToDB()){
 			Statement statement = connection.createStatement();
 			String query = "INSERT INTO " + TVIEWED + 
-					" ("+TVIEWED_IDMATERIAL+", "+TVIEWED_IDELEMENT+", "+TVIEWED_IDUSUARIO+")" +
-					 " VALUES("+ID_TMATERIALS [0]+", "+movie.getId()+", "+TUSER_IDUSUARIO+")";
+					" ("+TVIEWED_IDMATERIAL+", "+TVIEWED_IDELEMENT+", "+TVIEWED_IDUSUARIO+", "+TVIEWED_DATE+")" +
+					 " VALUES("+ID_TMATERIALS [0]+", "+movie.getId()+", "+TUSER_IDUSUARIO+", "+new Date()+")";
 			if (statement.executeUpdate(query) > 0) {
 				System.out.println("Se marcó en Visto");
 			}
@@ -83,9 +86,46 @@ public interface MovieDAO extends IDBConnection {
 			// TODO: handle exception
 			e.printStackTrace();
 		}
-		
-				
+
 		return viewed;
+	}
+
+	@SuppressWarnings("finally")
+	default ArrayList<Movie> getMoviesViewedByDate(Date date) {
+		ArrayList<Movie> movies = new ArrayList<>();
+		String dateFormat = new SimpleDateFormat("yyyy-MM-dd").format(date);
+
+		try (Connection connection = connectToDB()) {
+			String query = "SELECT * FROM " + TMOVIE + " AS m INNER JOIN " + TVIEWED +
+					" AS v ON m." + TMOVIE_ID + " = v." + TVIEWED_IDELEMENT +
+					" WHERE v." + TVIEWED_IDMATERIAL + " = " + ID_TMATERIALS[0] +
+					" AND v." + TVIEWED_IDUSUARIO + " = " + TUSER_IDUSUARIO +
+					" AND DATE(v.`" + TVIEWED_DATE + "`) = '" + dateFormat + "';";
+
+			PreparedStatement preparedStatement = connection.prepareStatement(query);
+			ResultSet resultSet = preparedStatement.executeQuery();
+
+			while (resultSet.next()) {
+				Movie movie = new Movie(
+						resultSet.getString("m." + TMOVIE_TITLE),
+						resultSet.getString("m." + TMOVIE_GENRE),
+						resultSet.getString("m." + TMOVIE_CREATOR),
+						resultSet.getInt("m." + TMOVIE_DURATION),
+						resultSet.getShort("m." + TMOVIE_YEAR));
+
+				movie.setId(resultSet.getInt("m." + TMOVIE_ID));
+				movie.setViewed(true);
+				movies.add(movie);
+			}
+
+			System.out.println(movies.size());
+
+			preparedStatement.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			return movies;
+		}
 	}
 	
 }
